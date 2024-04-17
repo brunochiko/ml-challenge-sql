@@ -91,17 +91,20 @@ CREATE TABLE `customer` (
   `address` varchar(255),
   `birthdate` varchar(255),
   `telephone` varchar(255),
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` date,
+  `updated_at` date
 );
 
 CREATE TABLE `item` (
   `id` integer PRIMARY KEY,
   `name` varchar(255),
+  `price` decimal(10,2),
   `description` varchar(255),
   `category` integer,
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `status` varchar(255),
+  `cancelled_at` timestamp,
+  `created_at` date,
+  `updated_at` date
 );
 
 CREATE TABLE `category` (
@@ -109,20 +112,20 @@ CREATE TABLE `category` (
   `name` varchar(255),
   `description` varchar(255),
   `address` varchar(255),
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` date,
+  `updated_at` date
 );
 
 CREATE TABLE `order` (
   `id` integer PRIMARY KEY,
   `date` timestamp,
   `item` integer,
-  `quantity` numeric,
-  `totalammount` numeric,
+  `quantity` decimal(10,2),
+  `totalammount` decimal(10,2),
   `seller` integer,
   `buyer` integer,
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` date,
+  `updated_at` date
 );
 
 ALTER TABLE `item` ADD FOREIGN KEY (`category`) REFERENCES `category` (`id`);
