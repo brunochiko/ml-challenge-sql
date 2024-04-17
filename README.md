@@ -140,33 +140,33 @@ ALTER TABLE `order` ADD FOREIGN KEY (`item`) REFERENCES `item` (`id`);
 
 ## Consultas 
 
-##Problema 1
+###Problema 1
 
 Para solucionar o problema criei uma query simples que faz joim entre a tabela de clientes e a tabela de pedidos. A query filtra os clientes em que o mês e o dia do aniversário coincide com o mês e dia atuais para selecionar os aniversariantes. Também filtro na query os pedidos do mês de janeiro e somo valor de todos os pedidos por cliente. a Cláusula 'HAVING' no final da query é responsável por filtrar apenas os clientes com o total de pedidos acima de 1500
 
 ```
 SELECT 
 	C.ID,
-  C.EMAIL,
-  C.BIRTHDATE,
-  C.FIRSTNAME,
-  C.LASTNAME,
-  SUM(O.TOTALAMMOUNT) AS TOTAL
+	C.EMAIL,
+	C.BIRTHDATE,
+	C.FIRSTNAME,
+	C.LASTNAME,
+	SUM(O.TOTALAMMOUNT) AS TOTAL
 FROM 
 	MELI.CUSTOMER C
-  INNER JOIN MELI.ORDER O ON C.ID = O.SELLER 
+	INNER JOIN MELI.ORDER O ON C.ID = O.SELLER 
 WHERE 
 	MONTH(C.BIRTHDATE) = MONTH(CURDATE()) AND DAY(C.BIRTHDATE) = DAY(CURDATE()) #CUSTOMERS CELEBRATING BIRTHDAY TODAY 
-  AND MONTH(O.DATE) = 1 AND year(O.DATE) = 2024 #ONLY 202401 ORDERS 
+	AND MONTH(O.DATE) = 1 AND year(O.DATE) = 2024 #ONLY 202401 ORDERS 
 GROUP BY 
 	C.ID,
-  C.EMAIL,
-  C.FIRSTNAME,
-  C.LASTNAME
+	C.EMAIL,
+	C.FIRSTNAME,
+	C.LASTNAME
 HAVING SUM(O.TOTALAMMOUNT) >= 1500; # TOTAL ORDERS OVER 1500
 ```
 
-##Problema 2
+###Problema 2
 
 Para a solução do problema utilizei uma common table expression (CTE) para organizar a query. A CTE tem uma estrutura parecida com a query do problema 1 com algumas diferenças prinicipais 
   - Foi feito Join com as tabelas de item e categoria para que fosse possível filtrar a categorias 'CELULARES'
@@ -179,11 +179,11 @@ WITH CUSTOMER_RANK AS(
 	SELECT 
 		MONTH(O.DATE) AS MONTH,
 		YEAR(O.DATE) AS YEAR,
-    C.ID,
+		C.ID,
 		C.FIRSTNAME,
 		C.LASTNAME,
-    COUNT(O.ID) AS ORDERS,
-    COUNT(DISTINCT I.ID) AS ITEMS,
+		COUNT(O.ID) AS ORDERS,
+		COUNT(DISTINCT I.ID) AS ITEMS,
 		SUM(O.TOTALAMMOUNT) AS TOTAL,
 		RANK() OVER (  
 			PARTITION BY MONTH(O.DATE)
@@ -207,7 +207,7 @@ WITH CUSTOMER_RANK AS(
 SELECT * FROM CUSTOMER_RANK WHERE POSICAO <= 5;
 ```
 
-##Problema 3
+###Problema 3
 
 Para solucionar o problema 3 criei uma stored procedures que recebe como parâmetro a data que se deseja processar e realiza os seguintes passos:
   - O primeiro passo da procedure elimina as linhas com a data de parâmetro caso aquela data já tenha sido processada no passado
