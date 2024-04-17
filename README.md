@@ -139,3 +139,101 @@ ALTER TABLE `order` ADD FOREIGN KEY (`item`) REFERENCES `item` (`id`);
 ```
 
 ## Consultas 
+
+##Problema 1
+
+Para solucionar o problema criei uma query simples que faz joim entre a tabela de clientes e a tabela de pedidos. A query filtra os clientes em que o mês e o dia do aniversário coincide com o mês e dia atuais para selecionar os aniversariantes. Também filtro na query os pedidos do mês de janeiro e somo valor de todos os pedidos por cliente. a Cláusula 'HAVING' no final da query é responsável por filtrar apenas os clientes com o total de pedidos acima de 1500
+
+```
+SELECT 
+	C.ID,
+  C.EMAIL,
+  C.BIRTHDATE,
+  C.FIRSTNAME,
+  C.LASTNAME,
+  SUM(O.TOTALAMMOUNT) AS TOTAL
+FROM 
+	MELI.CUSTOMER C
+  INNER JOIN MELI.ORDER O ON C.ID = O.SELLER 
+WHERE 
+	MONTH(C.BIRTHDATE) = MONTH(CURDATE()) AND DAY(C.BIRTHDATE) = DAY(CURDATE()) #CUSTOMERS CELEBRATING BIRTHDAY TODAY 
+  AND MONTH(O.DATE) = 1 AND year(O.DATE) = 2024 #ONLY 202401 ORDERS 
+GROUP BY 
+	C.ID,
+  C.EMAIL,
+  C.FIRSTNAME,
+  C.LASTNAME
+HAVING SUM(O.TOTALAMMOUNT) >= 1500; # TOTAL ORDERS OVER 1500
+```
+
+##Problema 2
+
+Para a solução do problema utilizei uma common table expression (CTE) para organizar a query. A CTE tem uma estrutura parecida com a query do problema 1 com algumas diferenças prinicipais 
+  - Foi feito Join com as tabelas de item e categoria para que fosse possível filtrar a categorias 'CELULARES'
+  - Utilizei a window function 'Rank' para calcular a posicao de cada cliente de acordo com o montante gasto no mês
+Por fim é executada uma query sobre a CTE para filtrar os 5 maiores clientes do mês utilizando o campo de ranking calculado na CTE
+
+
+```
+WITH CUSTOMER_RANK AS(
+	SELECT 
+		MONTH(O.DATE) AS MONTH,
+		YEAR(O.DATE) AS YEAR,
+    C.ID,
+		C.FIRSTNAME,
+		C.LASTNAME,
+    COUNT(O.ID) AS ORDERS,
+    COUNT(DISTINCT I.ID) AS ITEMS,
+		SUM(O.TOTALAMMOUNT) AS TOTAL,
+		RANK() OVER (  
+			PARTITION BY MONTH(O.DATE)
+			ORDER BY SUM(O.TOTALAMMOUNT) DESC
+		) POSICAO # RANK OVER THE TOTAL AMOUNT OF ALL ORDERS OF THE SELLER AND RESET THE RANK WHEN THE MONTH CHANGES
+	FROM 
+		MELI.CUSTOMER C
+		INNER JOIN MELI.ORDER O ON C.ID = O.SELLER 
+		INNER JOIN MELI.ITEM I  ON O.ITEM = I.ID
+		INNER JOIN MELI.CATEGORY CAT ON I.CATEGORY = CAT.ID
+	WHERE 
+		YEAR(O.DATE) = 2020
+		AND CAT.NAME = 'CELULARES'
+	GROUP BY 
+		MONTH(O.DATE) ,
+		YEAR(O.DATE) ,
+		C.ID,
+		C.FIRSTNAME,
+		C.LASTNAME
+)
+SELECT * FROM CUSTOMER_RANK WHERE POSICAO <= 5;
+```
+
+##Problema 3
+
+Para solucionar o problema 3 criei uma stored procedures que recebe como parâmetro a data que se deseja processar e realiza os seguintes passos:
+  - O primeiro passo da procedure elimina as linhas com a data de parâmetro caso aquela data já tenha sido processada no passado
+  - o segundo comando utiliza os campos created_at (data de criação do item) e cancelled_at (data de cancelamento do item) para checar se na data que estamos processando o item estava ativo ou não e criar o campo STATUS
+  - O resultado é gravado na tabela EOD_ITEMS que gardará o status de cada itens na data que estamos processando
+
+A procedure pode ser chamada uma vez para cada dia do histórico que se desejar. Caso algum dia precise ser reprocessado basta executar a procedure novamente com a data que se deseja recalcular
+
+
+
+```
+
+delimiter //
+CREATE PROCEDURE LOAD_EOD_ITEMS(IN PROCESS_DATE  DATE)
+BEGIN
+	DELETE FROM EOD_ITEMS WHERE DATE = PROCESS_DATE;
+	INSERT INTO EOD_ITEMS 
+	SELECT 
+		PROCESS_DATE AS DATE,
+		ID,
+		NAME,
+		PRICE,
+		CASE WHEN PROCESS_DATE BETWEEN CREATED_AT AND coalesce(CANCELLED_AT, CURDATE()) THEN 'ATIVO' ELSE 'CANCELADO' END AS STATUS
+	FROM 
+		ITEM;
+END //
+CALL LOAD_EOD_ITEMS('2024-04-09');
+
+```
