@@ -170,7 +170,7 @@ HAVING SUM(O.TOTALAMMOUNT) >= 1500; # TOTAL ORDERS OVER 1500
 
 Para a solução do problema utilizei uma common table expression (CTE) para organizar a query. A CTE tem uma estrutura parecida com a query do problema 1 com algumas diferenças prinicipais 
   - Foi feito Join com as tabelas de item e categoria para que fosse possível filtrar a categorias 'CELULARES'
-  - Utilizei a window function 'Rank' para calcular a posicao de cada cliente de acordo com o montante gasto no mês
+  - Utilizei a window function 'Rank' para calcular a posição de cada cliente de acordo com o montante gasto no mês
 Por fim é executada uma query sobre a CTE para filtrar os 5 maiores clientes do mês utilizando o campo de ranking calculado na CTE
 
 
