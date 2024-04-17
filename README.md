@@ -209,7 +209,7 @@ SELECT * FROM CUSTOMER_RANK WHERE POSICAO <= 5;
 
 ###Problema 3
 
-Para solucionar o problema 3 criei uma stored procedures que recebe como parâmetro a data que se deseja processar e realiza os seguintes passos:
+Para solucionar o problema 3 criei uma stored procedure que recebe como parâmetro a data que se deseja processar e realiza os seguintes passos:
   - O primeiro passo da procedure elimina as linhas com a data de parâmetro caso aquela data já tenha sido processada no passado
   - o segundo comando utiliza os campos created_at (data de criação do item) e cancelled_at (data de cancelamento do item) para checar se na data que estamos processando o item estava ativo ou não e criar o campo STATUS
   - O resultado é gravado na tabela EOD_ITEMS que gardará o status de cada itens na data que estamos processando
