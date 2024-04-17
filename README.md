@@ -14,6 +14,9 @@ Abaixo encontra-se também o código DBML que gerou o modelo. O diagrama pode se
 
 
 ````
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
 //This diagram was created by Bruno de Souza Francisco for meli data & analytics challenge
 
 Table customer {
@@ -25,17 +28,20 @@ Table customer {
   address varchar
   birthdate varchar
   telephone varchar
-  created_at timestamp 
-  updated_at timestamp 
+  created_at date 
+  updated_at date 
 }
 
 Table item {
   id integer [primary key]
   name varchar
+  price decimal(10,2)
   description varchar
   category integer
-  created_at timestamp 
-  updated_at timestamp 
+  status varchar
+  cancelled_at timestamp
+  created_at date 
+  updated_at date 
 }
 
 Table category {
@@ -43,20 +49,20 @@ Table category {
   name varchar
   description varchar
   address varchar
-  created_at timestamp 
-  updated_at timestamp 
+  created_at date 
+  updated_at date 
 }
 
 Table order {
   id integer [primary key]
   date timestamp
   item integer
-  quantity numeric
-  totalammount numeric
+  quantity decimal(10,2)
+  totalammount decimal(10,2)
   seller integer
   buyer integer
-  created_at timestamp 
-  updated_at timestamp 
+  created_at date 
+  updated_at date 
 }
 
 // Creates an one-to-many relationship. An item belongs to only one category and one category can have 0, one or more items
