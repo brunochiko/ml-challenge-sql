@@ -8,9 +8,10 @@ A seguir seguem os passos que foram feitos para resolver o desafio
 
 Dada as descrições das entidades gerei o seguinte modelo na ferramenta https://dbdiagram.io/
 
-![screenshot](https://github.com/brunochiko/ml-challenge-sql/blob/661f9f847d9190abe4307e2208caad53644b2698/Meli-DB%20Diagram.png)
+![screenshot](Meli-DB%20Diagram.png)
 
-Abaixo encontra-se também o código DBML que gerou o modelo 
+Abaixo encontra-se também o código DBML que gerou o modelo. O diagrama pode ser acessado em [https://dbdiagram.io/d/Meli-DB-Diagram-66200db903593b6b6142795c](https://dbdiagram.io/d/Meli-DB-Diagram-66200db903593b6b6142795c)
+
 
 ````
 //This diagram was created by Bruno de Souza Francisco for meli data & analytics challenge
@@ -70,7 +71,9 @@ Ref: item.id < order.item
 ````
 
 ## DDL 
-Os seguintes comandos foram executados e testados no mySQL community edition 8.0.36
+Os seguintes comandos foram executados e testados no mySQL community edition 8.0.36.  O código está na raiz do repositório com o nome [create_tables.sql](create_tables.sql)
+
+Nota: Em um ambiente produtivo seria uma boa prática incluir os comentários em cada uma das colunas do MySQL 
 
 ```
 CREATE TABLE `customer` (
@@ -126,4 +129,4 @@ ALTER TABLE `order` ADD FOREIGN KEY (`item`) REFERENCES `item` (`id`);
 
 ```
 
-
+## Consultas 
