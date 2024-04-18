@@ -13,7 +13,7 @@ Dada as descrições das entidades gerei o seguinte modelo na ferramenta https:/
 Abaixo encontra-se também o código DBML que gerou o modelo. O diagrama pode ser acessado em [https://dbdiagram.io/d/Meli-DB-Diagram-66200db903593b6b6142795c](https://dbdiagram.io/d/Meli-DB-Diagram-66200db903593b6b6142795c)
 
 
-````
+````dbml
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
 
@@ -81,7 +81,7 @@ Os seguintes comandos foram executados e testados no mySQL community edition 8.0
 
 Nota: Em um ambiente produtivo seria uma boa prática incluir os comentários em cada uma das colunas do MySQL 
 
-```
+```sql
 CREATE TABLE `customer` (
   `id` integer PRIMARY KEY,
   `email` varchar(255),
@@ -140,11 +140,11 @@ ALTER TABLE `order` ADD FOREIGN KEY (`item`) REFERENCES `item` (`id`);
 
 ## Consultas 
 
-###Problema 1
+### Problema 1
 
 Para solucionar o problema criei uma query simples que faz joim entre a tabela de clientes e a tabela de pedidos. A query filtra os clientes em que o mês e o dia do aniversário coincide com o mês e dia atuais para selecionar os aniversariantes. Também filtro na query os pedidos do mês de janeiro e somo valor de todos os pedidos por cliente. a Cláusula 'HAVING' no final da query é responsável por filtrar apenas os clientes com o total de pedidos acima de 1500
 
-```
+```sql
 SELECT 
 	C.ID,
 	C.EMAIL,
@@ -166,7 +166,7 @@ GROUP BY
 HAVING SUM(O.TOTALAMMOUNT) >= 1500; # TOTAL ORDERS OVER 1500
 ```
 
-###Problema 2
+### Problema 2
 
 Para a solução do problema utilizei uma common table expression (CTE) para organizar a query. A CTE tem uma estrutura parecida com a query do problema 1 com algumas diferenças prinicipais 
   - Foi feito Join com as tabelas de item e categoria para que fosse possível filtrar a categorias 'CELULARES'
@@ -174,7 +174,7 @@ Para a solução do problema utilizei uma common table expression (CTE) para org
 Por fim é executada uma query sobre a CTE para filtrar os 5 maiores clientes do mês utilizando o campo de ranking calculado na CTE
 
 
-```
+```sql
 WITH CUSTOMER_RANK AS(
 	SELECT 
 		MONTH(O.DATE) AS MONTH,
@@ -207,7 +207,7 @@ WITH CUSTOMER_RANK AS(
 SELECT * FROM CUSTOMER_RANK WHERE POSICAO <= 5;
 ```
 
-###Problema 3
+### Problema 3
 
 Para solucionar o problema 3 criei uma stored procedure que recebe como parâmetro a data que se deseja processar e realiza os seguintes passos:
   - O primeiro passo da procedure elimina as linhas com a data de parâmetro caso aquela data já tenha sido processada no passado
@@ -218,7 +218,7 @@ A procedure pode ser chamada uma vez para cada dia do histórico que se desejar.
 
 
 
-```
+```sql
 
 delimiter //
 CREATE PROCEDURE LOAD_EOD_ITEMS(IN PROCESS_DATE  DATE)
