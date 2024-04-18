@@ -239,7 +239,7 @@ CALL LOAD_EOD_ITEMS('2024-04-09');
 ```
 
 
-## Evideências de Testes
+## Evidências de Testes
 
 Massa de teste da tabela category
 
