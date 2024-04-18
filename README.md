@@ -237,3 +237,34 @@ END //
 CALL LOAD_EOD_ITEMS('2024-04-09');
 
 ```
+
+
+## Evideências de Testes
+
+Massa de teste da tabela category
+
+![screenshot](evidencia1.png)
+
+Massa de teste da tabela customer
+
+![screenshot](evidencia2.png)
+
+Massa de teste da tabela item
+
+![screenshot](evidencia3.png)
+
+Massa de teste da tabela order
+
+![screenshot](evidencia4.png)
+
+Resposta negócio 1, resultado da query 
+
+![screenshot](evidencia5.png)
+
+Resposta negócio 2, resultado da query
+
+![screenshot](evidencia6.png)
+
+Resposta negócio 3 (tabela resultado da execução da procedure)
+
+![screenshot](evidencia7.png)
